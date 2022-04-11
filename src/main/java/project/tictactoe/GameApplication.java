@@ -20,7 +20,7 @@ public class GameApplication extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("clientO.fxml"));
             Scene scene = null;
             try {
-                scene = new Scene(fxmlLoader.load(), 320, 240);
+                scene = new Scene(fxmlLoader.load(), 220, 125);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -35,7 +35,7 @@ public class GameApplication extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("clientX.fxml"));
             Scene scene = null;
             try {
-                scene = new Scene(fxmlLoader.load(), 320, 240);
+                scene = new Scene(fxmlLoader.load(), 220, 125);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -47,7 +47,7 @@ public class GameApplication extends Application {
 
     public class ServerWindow extends Stage{
         public ServerWindow() {
-            FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("clientX.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("server.fxml"));
             Scene scene = null;
             try {
                 scene = new Scene(fxmlLoader.load(), 320, 240);
