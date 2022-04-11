@@ -15,8 +15,12 @@ public class GameboardController {
     private void initialize() {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         DrawBoard(gc);
-        DrawX(gc,1,2);
-        DrawO(gc,2,1);
+        // example for calling the drawO/drawX functions
+        DrawO(gc,1,2);
+        DrawX(gc,1,1);
+        DrawX(gc,2,2);
+        DrawO(gc,1,3);
+        DrawO(gc,3,3);
     }
 
     private void DrawBoard(GraphicsContext gc){
@@ -63,7 +67,9 @@ public class GameboardController {
     }
 
     @FXML
-    public void End() throws IOException {
+    public void End() throws IOException { // this button will be removed, End should be called when
+                                           // the game ends (win/tie), EndController should also know who won
+                                           // to display the correct message.
         SceneController.switchTo(window.End);
         System.out.println("Clicked on end button");
     }
