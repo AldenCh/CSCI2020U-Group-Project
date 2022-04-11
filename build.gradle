@@ -24,7 +24,7 @@ tasks.withType(JavaCompile) {
 
 application {
     mainModule = 'project.tictactoe'
-    mainClass = 'project.tictactoe.ClientOApplication'
+    mainClass = 'project.tictactoe.GameApplication'
 }
 
 javafx {
