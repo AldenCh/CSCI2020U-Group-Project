@@ -46,7 +46,7 @@ public class GameApplication extends Application {
     }
 
     public class ServerWindow extends Stage{
-        public ServerWindow() {
+        public ServerWindow() throws IOException {
             FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("server.fxml"));
             Scene scene = null;
             try {
@@ -56,6 +56,8 @@ public class GameApplication extends Application {
             }
             this.setTitle("Board");
             this.setScene(scene);
+            SceneController.setScene(scene);
+            SceneController.switchTo(window.Server);
             this.show();
         }
     }

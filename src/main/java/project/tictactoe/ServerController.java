@@ -3,12 +3,18 @@ package project.tictactoe;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 
+import java.io.IOException;
+
 public class ServerController {
     @FXML
-    private Label welcomeText;
+    private void Start() throws IOException {
+        SceneController.switchTo(window.Gameboard);
+        System.out.println("Clicked on Start Game button");
+    }
 
     @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
+    private void Exit() {
+        System.out.println("Clicked on Exit button");
+        System.exit(0);
     }
 }
