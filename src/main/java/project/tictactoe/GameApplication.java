@@ -50,7 +50,7 @@ public class GameApplication extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("server.fxml"));
             Scene scene = null;
             try {
-                scene = new Scene(fxmlLoader.load(), 320, 240);
+                scene = new Scene(fxmlLoader.load(), 315, 375);
             } catch (IOException e) {
                 e.printStackTrace();
             }
