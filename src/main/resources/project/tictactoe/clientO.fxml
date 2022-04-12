@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 
-<AnchorPane prefHeight="124.0" prefWidth="221.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="project.tictactoe.ClientOController">
+<AnchorPane prefHeight="124.0" prefWidth="221.0" xmlns="http://javafx.com/javafx/11.0.2" xmlns:fx="http://javafx.com/fxml/1 fx:controller="project.tictactoe.ClientOController">
    <children>
       <GridPane id="gridPane" fx:id="gridPane" layoutX="14.0" layoutY="14.0" prefHeight="90.0" prefWidth="198.0">
         <columnConstraints>
