@@ -11,8 +11,6 @@ public class ServerController {
     private void Start() throws IOException {
         SceneController.switchTo(window.Gameboard);
         System.out.println("Clicked on Start Game button");
-        Set<Thread> threads = Thread.getAllStackTraces().keySet();
-        System.out.println(threads);
     }
 
     @FXML
