@@ -20,13 +20,13 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" text="Place O" onAction="#getString"/>
-            <Button mnemonicParsing="false" text="Place O" GridPane.columnIndex="1" onAction="#getString"/>
-            <Button mnemonicParsing="false" text="Place O" GridPane.columnIndex="2" onAction="#getString"/>
-            <Button mnemonicParsing="false" text="Place O" GridPane.rowIndex="1" onAction="#getString"/>
+            <Button mnemonicParsing="false" text="Place O" GridPane.columnIndex="0" GridPane.rowIndex="0" onAction="#getString"/>
+            <Button mnemonicParsing="false" text="Place O" GridPane.columnIndex="1" GridPane.rowIndex="0" onAction="#getString"/>
+            <Button mnemonicParsing="false" text="Place O" GridPane.columnIndex="2" GridPane.rowIndex="0" onAction="#getString"/>
+            <Button mnemonicParsing="false" text="Place O" GridPane.columnIndex="0" GridPane.rowIndex="1" onAction="#getString"/>
             <Button mnemonicParsing="false" text="Place O" GridPane.columnIndex="1" GridPane.rowIndex="1" onAction="#getString"/>
             <Button mnemonicParsing="false" text="Place O" GridPane.columnIndex="2" GridPane.rowIndex="1" onAction="#getString"/>
-            <Button mnemonicParsing="false" text="Place O" GridPane.rowIndex="2" onAction="#getString"/>
+            <Button mnemonicParsing="false" text="Place O" GridPane.columnIndex="0" GridPane.rowIndex="2" onAction="#getString"/>
             <Button mnemonicParsing="false" text="Place O" GridPane.columnIndex="1" GridPane.rowIndex="2" onAction="#getString"/>
             <Button mnemonicParsing="false" text="Place O" GridPane.columnIndex="2" GridPane.rowIndex="2" onAction="#getString"/>
          </children>
