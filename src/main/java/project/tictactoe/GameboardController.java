@@ -24,6 +24,8 @@ public class GameboardController {
     private boolean running = true;
     private Thread OThread;
     private Thread XThread;
+    private ServerSocket Oss;
+    private ServerSocket Xss;
 
     @FXML
     private void initialize() throws IOException {
@@ -33,11 +35,13 @@ public class GameboardController {
         }
         DrawBoard(gc);
 
-        OServer oServer = new OServer();
+        Oss = new ServerSocket(4999);
+        OServer oServer = new OServer(Oss);
         OThread = new Thread(oServer);
         OThread.start();
 
-        XServer xServer = new XServer();
+        Xss = new ServerSocket(4998);
+        XServer xServer = new XServer(Xss);
         XThread = new Thread(xServer);
         XThread.start();
 
@@ -103,8 +107,8 @@ public class GameboardController {
             }
         }
         xTurn = true;
-        XThread.interrupt();
-        OThread.interrupt();
+        Oss.close();
+        Xss.close();
         SceneController.switchTo(window.End);
         System.out.println("Clicked on end button");
     }
@@ -113,10 +117,14 @@ public class GameboardController {
         ServerSocket Oss;
         Socket OSocket;
         DataInputStream in;
+
+        public OServer(ServerSocket ss){
+            Oss = ss;
+        }
+
         @Override
         public void run() {
             try {
-                Oss = new ServerSocket(4999);
                 while(running){
                     System.out.println("Waiting on connection");
                     OSocket = Oss.accept();
@@ -145,10 +153,14 @@ public class GameboardController {
         ServerSocket Xss;
         Socket XSocket;
         DataInputStream in;
+
+        public XServer(ServerSocket ss){
+            Xss = ss;
+        }
+
         @Override
         public void run() {
             try {
-                Xss = new ServerSocket(4998);
                 while(running){
                     System.out.println("Waiting on connection");
                     XSocket = Xss.accept();

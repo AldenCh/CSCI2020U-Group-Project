@@ -3,6 +3,7 @@ package project.tictactoe;
 import javafx.fxml.FXML;
 
 import java.io.IOException;
+import java.util.Set;
 
 public class ServerController {
 
@@ -10,6 +11,8 @@ public class ServerController {
     private void Start() throws IOException {
         SceneController.switchTo(window.Gameboard);
         System.out.println("Clicked on Start Game button");
+        Set<Thread> threads = Thread.getAllStackTraces().keySet();
+        System.out.println(threads);
     }
 
     @FXML
