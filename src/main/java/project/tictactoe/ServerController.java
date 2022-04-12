@@ -1,11 +1,11 @@
 package project.tictactoe;
 
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 
 import java.io.IOException;
 
 public class ServerController {
+
     @FXML
     private void Start() throws IOException {
         SceneController.switchTo(window.Gameboard);
@@ -13,8 +13,9 @@ public class ServerController {
     }
 
     @FXML
-    private void Exit() {
+    private void Exit() throws IOException {
         System.out.println("Clicked on Exit button");
         System.exit(0);
     }
+
 }

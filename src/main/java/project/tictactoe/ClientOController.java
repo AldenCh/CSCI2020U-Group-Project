@@ -2,28 +2,49 @@ package project.tictactoe;
 
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 
-import static java.lang.String.valueOf;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.net.Socket;
 
 public class ClientOController{
     @FXML
     GridPane gridPane;
+    String location;
 
-    public String getString(ActionEvent event) {
+    public void getString(ActionEvent event) throws IOException {
+
         Node node = (Node) event.getSource();
         ObservableList<Node> kids = gridPane.getChildren();
         for (Node kid : kids) {
             if (kid == node) {
-                System.out.println("O " + gridPane.getRowIndex(kid)  + " " + gridPane.getColumnIndex(kid));
-                return "O " + gridPane.getRowIndex(kid) + " " + gridPane.getColumnIndex(kid);
+                location =  "O " + gridPane.getRowIndex(kid) + " " + gridPane.getColumnIndex(kid);
             }
         }
-        return "error";
+        Response r = new Response();
+        Thread OThread = new Thread(r);
+        OThread.start();
+    }
+
+    public class Response implements Runnable {
+        Socket OSocket;
+
+        @Override
+        public void run() {
+            try {
+                OSocket= new Socket("localhost", 4999);
+                OSocket.getOutputStream().flush();
+                DataOutputStream out = new DataOutputStream(OSocket.getOutputStream());
+                out.writeUTF(location);
+                out.close();
+                OSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }
