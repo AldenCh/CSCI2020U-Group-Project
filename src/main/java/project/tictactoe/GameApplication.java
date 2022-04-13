@@ -10,8 +10,8 @@ import java.io.IOException;
 public class GameApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        new OWindow();
-        new XWindow();
+//        new OWindow();
+//        new XWindow();
         new ServerWindow();
     }
 

@@ -1,15 +1,20 @@
 package project.tictactoe;
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Arrays;
 
 public class GameboardController {
     @FXML
@@ -26,9 +31,18 @@ public class GameboardController {
     private Thread XThread;
     private ServerSocket Oss;
     private ServerSocket Xss;
+    private OWindow o;
+    private XWindow x;
 
     @FXML
     private void initialize() throws IOException {
+        o = new OWindow();
+        o.setX(870);
+        o.setY(320);
+        x = new XWindow();
+        x.setX(340);
+        x.setY(320);
+
         if (null == gc){
             System.out.println("Null");
             gc = canvas.getGraphicsContext2D();
@@ -90,6 +104,61 @@ public class GameboardController {
         gc.fillOval(xStart + 20,yStart + 20,50,50);
     }
 
+    private String checkWin(String[][] board, String symbol) {
+        //row check
+        for (int x = 0; x <= 2; x++) {
+            int correct = 0;
+            for (int y = 0; y <= 2; y++) {
+                if (board[x][y].equals(symbol)) {
+                    correct++;
+                }
+            }
+            if (3 == correct) {
+                return symbol;
+            }
+        }
+        //column check
+        for (int y = 0; y <= 2; y++) {
+            int correct = 0;
+            for (int x = 0; x <= 2; x++) {
+                if (board[x][y].equals(symbol)) {
+                    correct++;
+                }
+            }
+            if (3 == correct) {
+                return symbol;
+            }
+        }
+        int diagCheck = 0;
+        for (int x = 0; x <= 2; x++) {
+            if (board[x][x].equals(symbol)) {
+                diagCheck++;
+            }
+        }
+        if (3 == diagCheck) {
+            return symbol;
+        }
+        diagCheck = 0;
+        int x = 2;
+        for (int y = 0; y <= 2; y++, x--) {
+            if (board[x][y].equals(symbol)) {
+                diagCheck++;
+            }
+        }
+        if (3 == diagCheck) {
+            return symbol;
+        }
+        //tie check
+        for (int z = 0; z <= 2; z++) {
+            for (int y = 0; y <= 2; y++) {
+                if (board[z][y].equals("-")) {
+                    return "none";
+                }
+            }
+        }
+        return "tie";
+    }
+
     @FXML
     private void Exit() {
         System.out.println("Clicked on Exit button");
@@ -107,9 +176,20 @@ public class GameboardController {
             }
         }
         xTurn = true;
+
         Oss.close();
         Xss.close();
-        SceneController.switchTo(window.End);
+        Platform.runLater(
+                () -> {
+                    x.close();
+                    o.close();
+                    try {
+                        SceneController.switchTo(window.End);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+        );
         System.out.println("Clicked on end button");
     }
 
@@ -136,6 +216,15 @@ public class GameboardController {
                         if ("-" == board[Integer.parseInt(position[1])][Integer.parseInt(position[2])]) {
                             board[Integer.parseInt(position[1])][Integer.parseInt(position[2])] = position[0];
                             DrawO(gc, Integer.parseInt(position[1]) + 1, Integer.parseInt(position[2]) + 1);
+
+                            String status = checkWin(board, position[0]);
+                            if (status.equals("X") || status.equals("O") || status == "tie"){
+                                OSocket.close();
+                                Thread.sleep(500);
+                                End();
+                                break;
+                            }
+
                             xTurn = !xTurn;
                         }
                     }
@@ -144,6 +233,8 @@ public class GameboardController {
                 OSocket.close();
                 Oss.close();
             } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -172,7 +263,14 @@ public class GameboardController {
                         if ("-" == board[Integer.parseInt(position[1])][Integer.parseInt(position[2])]) {
                             board[Integer.parseInt(position[1])][Integer.parseInt(position[2])] = position[0];
                             DrawX(gc, Integer.parseInt(position[1]) + 1, Integer.parseInt(position[2]) + 1);
-                            System.out.println("Made it");
+
+                            String status = checkWin(board, position[0]);
+                            if (status.equals("X") || status.equals("O") || status == "tie"){
+                                XSocket.close();
+                                Thread.sleep(500);
+                                End();
+                                break;
+                            }
                             xTurn = !xTurn;
                         }
                     }
@@ -182,7 +280,39 @@ public class GameboardController {
                 Xss.close();
             } catch (IOException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+        }
+    }
+
+    public class OWindow extends Stage {
+        public OWindow() {
+            FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("clientO.fxml"));
+            Scene scene = null;
+            try {
+                scene = new Scene(fxmlLoader.load(), 220, 125);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            this.setTitle("Player O");
+            this.setScene(scene);
+            this.show();
+        }
+    }
+
+    public class XWindow extends Stage{
+        public XWindow() {
+            FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("clientX.fxml"));
+            Scene scene = null;
+            try {
+                scene = new Scene(fxmlLoader.load(), 220, 125);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            this.setTitle("Player X");
+            this.setScene(scene);
+            this.show();
         }
     }
 }
