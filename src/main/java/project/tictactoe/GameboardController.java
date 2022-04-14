@@ -9,9 +9,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
@@ -52,8 +50,6 @@ public class GameboardController {
      * A function called before any GUI or other functions are called or created
      * Creates the controllers for X and O, and paints the board on the main windows Canvas
      * Starts the threads responsible for handling incoming server connections from the two controllers
-     *
-     * @see Initializable
      */
     @FXML
     private void initialize() throws IOException {
@@ -240,6 +236,63 @@ public class GameboardController {
 
         Oss.close();
         Xss.close();
+
+        // read from csv to get the values
+        String line1 = "X,O,T\n";
+        int Xwins = -1;
+        int Owins = -1;
+        int Ties = -1;
+        FileReader file = null;
+        try {
+            file = new FileReader(new File(
+                    "src/main/resources/project/tictactoe","wins.csv"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        BufferedReader reader;
+        reader = new BufferedReader(file);
+        try {
+            reader.readLine();
+            String line = reader.readLine();
+            String[] split = line.split(",");
+            Xwins = Integer.parseInt(split[0]);
+            Owins = Integer.parseInt(split[1]);
+            Ties = Integer.parseInt(split[2]);
+
+            reader.close();  //closes the scanner
+
+        } catch(IOException e){
+            System.out.println("IOException from load()");
+            e.printStackTrace();
+        }
+
+        // write updated win count to the csv file
+        FileWriter file2 = null;
+        try {
+            file2 = new FileWriter(new File(
+                    "src/main/resources/project/tictactoe","wins.csv"));
+
+            BufferedWriter writer = new BufferedWriter(file2);
+            writer.write(line1);
+            if (winner.equals("X")) {
+                Xwins ++;
+            } else if (winner.equals("O")) {
+                Owins ++;
+            } else {
+                Ties ++;
+            }
+            writer.write(Xwins +","+Owins+","+Ties);
+
+            writer.close();  //closes the scanner
+
+        } catch (FileNotFoundException e) {
+            System.out.println("FileNotFound from writeCSV()");
+            e.printStackTrace();
+        } catch(IOException e){
+            System.out.println("IOException from load()");
+            e.printStackTrace();
+        }
+
         Platform.runLater(
                 () -> {
                     x.close();

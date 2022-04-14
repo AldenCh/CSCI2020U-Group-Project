@@ -15,12 +15,24 @@
          <Image url="@logo.png" />
       </image>
    </ImageView>
-    <Button layoutX="64.0" layoutY="53.0" onAction="#Start" style="-fx-background-color: GREEN; -fx-border-color: BLACK; -fx-border-width: 2;" text="Start Game" textAlignment="CENTER" textFill="WHITE">
+    <Button layoutX="64.0" layoutY="53.0" onAction="#Start" style="-fx-background-color: GREEN; -fx-border-color: BLACK; -fx-border-width: 2;" text="Start Game" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP">
       <font>
          <Font size="24.0" />
       </font></Button>
-    <Button layoutX="84.0" layoutY="113.0" onAction="#Exit" prefHeight="41.0" prefWidth="74.0" style="-fx-background-color: RED; -fx-border-color: BLACK; -fx-border-width: 2;" text="Exit" textAlignment="CENTER" textFill="WHITE">
+    <Button layoutX="84.0" layoutY="113.0" onAction="#Exit" prefHeight="41.0" prefWidth="74.0" style="-fx-background-color: RED; -fx-border-color: BLACK; -fx-border-width: 2;" text="Exit" textAlignment="CENTER" textFill="WHITE" textOverrun="CLIP">
       <font>
          <Font size="18.0" />
       </font></Button>
+    <Label fx:id="Xwins" prefHeight="31.0" prefWidth="85.0" style="-fx-border-color: red; -fx-border-width: 2;" text=" X wins: " textAlignment="CENTER" textOverrun="CLIP">
+      <font>
+         <Font size="18.0" />
+      </font></Label>
+    <Label fx:id="Owins" prefHeight="31.0" prefWidth="85.0" style="-fx-border-color: green; -fx-border-width: 2;" text=" O wins: " textAlignment="CENTER" textOverrun="CLIP">
+      <font>
+         <Font size="18.0" />
+      </font></Label>
+    <Label fx:id="Ties" prefHeight="31.0" prefWidth="85.0" style="-fx-border-color: black; -fx-border-width: 2;" text=" Ties: " textAlignment="CENTER" textOverrun="CLIP">
+      <font>
+         <Font size="18.0" />
+      </font></Label>
 </VBox>
