@@ -10,12 +10,21 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
+/***
+ * The class responsible for the functionality of the X controller
+ */
 public class ClientXController {
     @FXML
     GridPane gridPain;
     String location;
 
-    public void getString(ActionEvent event) throws IOException {
+    /***
+     * The function called by the X controller buttons
+     * which stores the associated coordinates of that button
+     *
+     * @param event The event associated to the press of one the X controller buttons
+     */
+    public void getString(ActionEvent event) {
 
         Node node = (Node) event.getSource();
         ObservableList<Node> kids = gridPain.getChildren();
@@ -29,6 +38,10 @@ public class ClientXController {
         XThread.start();
     }
 
+    /***
+     * The thread created to handle sending server messages
+     * regarding button presses
+     */
     public class Response implements Runnable {
         Socket XSocket;
 

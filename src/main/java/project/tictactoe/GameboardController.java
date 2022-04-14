@@ -22,10 +22,16 @@ import java.util.Arrays;
  * The program also has functionality for drawing an X or O in a specified row and column
  */
 public class GameboardController {
-    @FXML
-    public Canvas canvas;
-    @FXML
-    public Canvas turnCanvas;
+    /***
+     * The Canvas responsible for displaying the tic-tac-toe board
+     */
+    @FXML public Canvas canvas;
+
+    /***
+     * The Canvas responsible for displaying who's turn it is in game
+     */
+    @FXML public Canvas turnCanvas;
+
     private GraphicsContext gc;
     private GraphicsContext tgc;
     private String[][] board = {
@@ -42,6 +48,13 @@ public class GameboardController {
     private OWindow o;
     private XWindow x;
 
+    /***
+     * A function called before any GUI or other functions are called or created
+     * Creates the controllers for X and O, and paints the board on the main windows Canvas
+     * Starts the threads responsible for handling incoming server connections from the two controllers
+     *
+     * @see Initializable
+     */
     @FXML
     private void initialize() throws IOException {
         // initialize player O's control window
@@ -139,7 +152,7 @@ public class GameboardController {
     }
 
     /***
-     * Draws an O on the board according to the row and column specified
+     * Checks the board to see if either side won or if there's a tie
      *
      * @param board A 2x2 2D array that represents the state of the game board
      * @param symbol Either "X" or "O" to declare which side is checking for a win
@@ -201,7 +214,7 @@ public class GameboardController {
 
     @FXML
     /***
-     * When the exit button is clicked Exit() is called, closing all windows.
+     * When the exit button is clicked Exit() is called, closing all windows and threads.
      */
     private void Exit() {
         System.out.println("Clicked on Exit button");
@@ -248,11 +261,23 @@ public class GameboardController {
         System.out.println("Clicked on end button");
     }
 
+    /***
+     * The thread containing the Server responsible for handling incoming
+     * server messages from the O controller
+     *
+     * @see ClientOController
+     */
     public class OServer implements Runnable{
         ServerSocket Oss;
         Socket OSocket;
         DataInputStream in;
 
+        /***
+         * The constructor for the thread handling server messages related to the O controller
+         *
+         * @param ss The ServerSocket responsible for O
+         * @see ClientOController
+         */
         public OServer(ServerSocket ss){
             Oss = ss;
         }
@@ -301,11 +326,23 @@ public class GameboardController {
         }
     }
 
+    /***
+     * The thread containing the Server responsible for handling incoming
+     * server messages from the X controller
+     *
+     * @see ClientXController
+     */
     public class XServer implements Runnable{
         ServerSocket Xss;
         Socket XSocket;
         DataInputStream in;
 
+        /***
+         * The constructor for the thread handling server messages related to the X controller
+         *
+         * @param ss The ServerSocket responsible for X
+         * @see ClientXController
+         */
         public XServer(ServerSocket ss){
             Xss = ss;
         }
@@ -354,6 +391,9 @@ public class GameboardController {
         }
     }
 
+    /***
+     * The window of the O controller
+     */
     public class OWindow extends Stage {
         public OWindow() {
             FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("clientO.fxml"));
@@ -369,6 +409,9 @@ public class GameboardController {
         }
     }
 
+    /***
+     * The window of the X controller
+     */
     public class XWindow extends Stage{
         public XWindow() {
             FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("clientX.fxml"));

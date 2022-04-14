@@ -7,42 +7,29 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/***
+ * The class associated with the main window
+ */
 public class GameApplication extends Application {
+    /***
+     * The function to call the creation of the main window at the beginning of the program
+     *
+     * @param stage The window to be displayed
+     * @throws IOException To display any Input or Output Exceptions that may occur during
+     *                     the loading of the associated FXML file
+     */
     @Override
     public void start(Stage stage) throws IOException {
-//        new OWindow();
-//        new XWindow();
         new ServerWindow();
     }
 
-    public class OWindow extends Stage{
-        public OWindow() {
-            FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("clientO.fxml"));
-            Scene scene = null;
-            try {
-                scene = new Scene(fxmlLoader.load(), 125, 125);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            this.setScene(scene);
-            this.show();
-        }
-    }
-
-    public class XWindow extends Stage{
-        public XWindow() {
-            FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("clientX.fxml"));
-            Scene scene = null;
-            try {
-                scene = new Scene(fxmlLoader.load(), 125, 125);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            this.setScene(scene);
-            this.show();
-        }
-    }
-
+    /***
+     * The class that creates the main window used by the Gameboard, Start Page, and End Page.
+     *
+     * @see GameboardController
+     * @see ServerController
+     * @see EndController
+     */
     public class ServerWindow extends Stage{
         public ServerWindow() throws IOException {
             FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("server.fxml"));
@@ -60,6 +47,11 @@ public class GameApplication extends Application {
         }
     }
 
+    /***
+     * The function to launch our JavaFX application
+     *
+     * @see Application
+     */
     public static void main(String[] args) {
         launch();
     }
