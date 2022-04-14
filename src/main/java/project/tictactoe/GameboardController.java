@@ -16,10 +16,18 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Arrays;
 
+/***
+ * The controller for the main gameboard which displays the game and takes input from the two clients (X,O)
+ * The programs starts off with two canvas' one for displaying the game and one for displaying the turn
+ * The program also has functionality for drawing an X or O in a specified row and column
+ */
 public class GameboardController {
     @FXML
     public Canvas canvas;
-    private GraphicsContext gc = null;
+    @FXML
+    public Canvas turnCanvas;
+    private GraphicsContext gc;
+    private GraphicsContext tgc;
     private String[][] board = {
             {"-", "-", "-"},
             {"-", "-", "-"},
@@ -36,18 +44,31 @@ public class GameboardController {
 
     @FXML
     private void initialize() throws IOException {
+        // initialize player O's control window
         o = new OWindow();
-        o.setX(870);
-        o.setY(320);
-        x = new XWindow();
-        x.setX(340);
-        x.setY(320);
+        o.setX(1450);
+        o.setY(350);
+        o.setHeight(160);
+        o.setWidth(140);
+        o.setTitle("");
 
-        if (null == gc){
-            System.out.println("Null");
-            gc = canvas.getGraphicsContext2D();
-        }
+        // initialize player X's control window
+        x = new XWindow();
+        x.setX(970);
+        x.setY(350);
+        x.setHeight(160);
+        x.setWidth(140);
+        x.setTitle("");
+
+        gc = canvas.getGraphicsContext2D();
+        tgc = turnCanvas.getGraphicsContext2D();
+
+        // draw the board and display the current turn as X
         DrawBoard(gc);
+        tgc.setStroke(Color.RED);
+        tgc.setLineWidth(5);
+        tgc.strokeLine(5, 5, 35, 35);
+        tgc.strokeLine(5, 35, 35, 5);
 
         Oss = new ServerSocket(4999);
         OServer oServer = new OServer(Oss);
@@ -58,15 +79,12 @@ public class GameboardController {
         XServer xServer = new XServer(Xss);
         XThread = new Thread(xServer);
         XThread.start();
-
-        // example for calling the drawO/drawX functions
-//        DrawO(gc,1,2);
-//        DrawX(gc,1,1);
-//        DrawX(gc,2,2);
-//        DrawO(gc,1,3);
-//        DrawO(gc,3,3);
     }
 
+    /***
+     * Takes a GraphicsContext gc and draws the board using black lines
+     * @param gc GraphicsContext of the gameboard canvas
+     */
     private void DrawBoard(GraphicsContext gc){
         gc.setFill(Color.BLACK);
         // draw border
@@ -82,22 +100,38 @@ public class GameboardController {
         gc.strokeLine(5,205,305,205);
     }
 
+    /***
+     * Draws an X on the board according to the row and column specified
+     * @param gc GraphicsContext of the gameboard canvas
+     * @param row Desired row to draw an X (0-2)
+     * @param col Desired column to draw an X (0-2)
+     */
     private void DrawX(GraphicsContext gc, double row, double col){
+        // setup variables
         double xStart = (col - 1) * 100 + 25;
         double yStart = (row - 1) * 100 + 25;
         double xEnd = xStart + 60;
         double yEnd = yStart + 60;
 
+        // draw the X
         gc.setStroke(Color.RED);
         gc.setLineWidth(25);
         gc.strokeLine(xStart, yStart, xEnd, yEnd);
         gc.strokeLine(xStart, yEnd, xEnd, yStart);
     }
 
+    /***
+     * Draws an O on the board according to the row and column specified
+     * @param gc GraphicsContext of the gameboard canvas
+     * @param row Desired row to draw an O (0-2)
+     * @param col Desired column to draw an O (0-2)
+     */
     private void DrawO(GraphicsContext gc, double row, double col){
+        // setup variables
         double xStart = (col - 1) * 100 + 10;
         double yStart = (row - 1) * 100 + 10;
 
+        // draw the O
         gc.setFill(Color.LIGHTGREEN);
         gc.fillOval(xStart,yStart,90,90);
         gc.setFill(Color.WHITE);
@@ -160,6 +194,9 @@ public class GameboardController {
     }
 
     @FXML
+    /***
+     * When the exit button is clicked Exit() is called, closing all windows
+     */
     private void Exit() {
         System.out.println("Clicked on Exit button");
         running = false;
@@ -167,9 +204,12 @@ public class GameboardController {
     }
 
     @FXML
-    public void End() throws IOException { // this button will be removed, End should be called when
-                                           // the game ends (win/tie), EndController should also know who won
-                                           // to display the correct message.
+    /***
+     * Called when the game has resulted in a win or tie and switches scenes
+     *  to the relevant winner
+     * @param winner The winner of the game (X,O,tie)
+     */
+    public void End(String winner) throws IOException {
         for (int i = 0; i < 3; i++){
             for (int j = 0; j < 3; j++){
                 board[i][j] = "-";
@@ -184,7 +224,14 @@ public class GameboardController {
                     x.close();
                     o.close();
                     try {
-                        SceneController.switchTo(window.End);
+                        // calls the fxml file of the winner, they all share the same EndController
+                        if (winner.equals("X")) {
+                            SceneController.switchTo(window.XEnd);
+                        } else if (winner.equals("O")) {
+                            SceneController.switchTo(window.OEnd);
+                        } else {
+                            SceneController.switchTo(window.TEnd);
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -217,15 +264,24 @@ public class GameboardController {
                             board[Integer.parseInt(position[1])][Integer.parseInt(position[2])] = position[0];
                             DrawO(gc, Integer.parseInt(position[1]) + 1, Integer.parseInt(position[2]) + 1);
 
+                            // when O's turn ends, draw an X to tell the user that it is X's turn
+                            tgc.clearRect(0, 0, turnCanvas.getWidth(), turnCanvas.getHeight());
+                            tgc.setStroke(Color.RED);
+                            tgc.setLineWidth(5);
+                            tgc.strokeLine(5, 5, 35, 35);
+                            tgc.strokeLine(5, 35, 35, 5);
+
                             String status = checkWin(board, position[0]);
                             if (status.equals("X") || status.equals("O") || status == "tie"){
+
                                 OSocket.close();
                                 Thread.sleep(500);
-                                End();
+                                End(status);
                                 break;
                             }
 
                             xTurn = !xTurn;
+                            //tgc.clearRect(0, 0, turnCanvas.getWidth(), turnCanvas.getHeight());
                         }
                     }
                 }
@@ -256,6 +312,7 @@ public class GameboardController {
                     System.out.println("Waiting on connection");
                     XSocket = Xss.accept();
                     if (xTurn){
+
                         in = new DataInputStream(XSocket.getInputStream());
                         System.out.println("Connected with X Client ");
                         String message = in.readUTF();
@@ -264,11 +321,18 @@ public class GameboardController {
                             board[Integer.parseInt(position[1])][Integer.parseInt(position[2])] = position[0];
                             DrawX(gc, Integer.parseInt(position[1]) + 1, Integer.parseInt(position[2]) + 1);
 
+                            // when X's turn ends, draw an O to tell the user that it is O's turn
+                            tgc.clearRect(0, 0, turnCanvas.getWidth(), turnCanvas.getHeight());
+                            tgc.setFill(Color.LIGHTGREEN);
+                            tgc.fillOval(0,0,40,40);
+                            tgc.setFill(Color.WHITE);
+                            tgc.fillOval(8,8,24,24);
+
                             String status = checkWin(board, position[0]);
                             if (status.equals("X") || status.equals("O") || status == "tie"){
                                 XSocket.close();
                                 Thread.sleep(500);
-                                End();
+                                End(status);
                                 break;
                             }
                             xTurn = !xTurn;

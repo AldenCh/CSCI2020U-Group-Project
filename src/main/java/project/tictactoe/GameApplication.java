@@ -20,11 +20,10 @@ public class GameApplication extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("clientO.fxml"));
             Scene scene = null;
             try {
-                scene = new Scene(fxmlLoader.load(), 220, 125);
+                scene = new Scene(fxmlLoader.load(), 125, 125);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            this.setTitle("Player O");
             this.setScene(scene);
             this.show();
         }
@@ -35,11 +34,10 @@ public class GameApplication extends Application {
             FXMLLoader fxmlLoader = new FXMLLoader(GameApplication.class.getResource("clientX.fxml"));
             Scene scene = null;
             try {
-                scene = new Scene(fxmlLoader.load(), 220, 125);
+                scene = new Scene(fxmlLoader.load(), 125, 125);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            this.setTitle("Player X");
             this.setScene(scene);
             this.show();
         }
