@@ -138,6 +138,12 @@ public class GameboardController {
         gc.fillOval(xStart + 20,yStart + 20,50,50);
     }
 
+    /***
+     * Draws an O on the board according to the row and column specified
+     *
+     * @param board A 2x2 2D array that represents the state of the game board
+     * @param symbol Either "X" or "O" to declare which side is checking for a win
+     */
     private String checkWin(String[][] board, String symbol) {
         //row check
         for (int x = 0; x <= 2; x++) {
@@ -195,7 +201,7 @@ public class GameboardController {
 
     @FXML
     /***
-     * When the exit button is clicked Exit() is called, closing all windows
+     * When the exit button is clicked Exit() is called, closing all windows.
      */
     private void Exit() {
         System.out.println("Clicked on Exit button");
@@ -205,11 +211,13 @@ public class GameboardController {
 
     @FXML
     /***
-     * Called when the game has resulted in a win or tie and switches scenes
-     *  to the relevant winner
+     * Called when the game has resulted in a win or tie
+     * Handles switching scenes, closing sockets, and stopping threads
+     *
      * @param winner The winner of the game (X,O,tie)
      */
-    public void End(String winner) throws IOException {
+    public void End(String winner) throws IOException, InterruptedException {
+        Thread.sleep(500);
         for (int i = 0; i < 3; i++){
             for (int j = 0; j < 3; j++){
                 board[i][j] = "-";
@@ -275,7 +283,6 @@ public class GameboardController {
                             if (status.equals("X") || status.equals("O") || status == "tie"){
 
                                 OSocket.close();
-                                Thread.sleep(500);
                                 End(status);
                                 break;
                             }
@@ -288,9 +295,7 @@ public class GameboardController {
                 in.close();
                 OSocket.close();
                 Oss.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (InterruptedException e) {
+            } catch (IOException | InterruptedException e) {
                 e.printStackTrace();
             }
         }
@@ -331,7 +336,6 @@ public class GameboardController {
                             String status = checkWin(board, position[0]);
                             if (status.equals("X") || status.equals("O") || status == "tie"){
                                 XSocket.close();
-                                Thread.sleep(500);
                                 End(status);
                                 break;
                             }
